@@ -20,6 +20,7 @@ for k=1:600
 
     % imagesc(2*seed+seed_d)
     % axis([2100 2600 3100 3600])
+    %axis ([2100 2600 2700 3200])
     % drawnow
     % pause(0.0001)
     n_seed = sum(sum(seed>0));
@@ -30,8 +31,10 @@ for k=1:600
 end
 
 %%
-
-seed2               = ((bwskel(imfill(seed,'holes'))));
+% This may fill the lumen and everything else. It is necessary to check
+% that it only fills small holes
+seed1               = imfill(seed,'holes');
+seed2               = ((bwskel(seed1)));
 seed3               = bwmorph(seed2,'spur',10);
 seed3_L             = bwlabel(seed3);
 seed3_B             = bwmorph((seed3),'branchpoints');
