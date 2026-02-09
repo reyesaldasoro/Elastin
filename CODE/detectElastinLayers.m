@@ -1,12 +1,19 @@
-DATA
 clear all
 close all
-baseDir  ='C:\Users\sbbk034\OneDrive - City, University of London\Acad\Research\LuisMartinezLemus\Elastin\';
+
+if filesep=='\'
+    baseDir  ='C:\Users\sbbk034\OneDrive - City, University of London\Acad\Research\LuisMartinezLemus\Elastin\';
+else
+    baseDir = ("/Users/constantino-carlos.reyes-aldasoro/Documents/GitHub/Elastin/DATA/");
+end
 
 
 %%
 dir0 = dir(strcat(baseDir,'*.tif'));
-a0 = imread(strcat(baseDir,dir0(1).name));
+a0 = imread(strcat(baseDir,dir0(2).name));
+imagesc(a0)
+
+%%
 
 a1 = a0(:,:,1);
 a1_LPF = imfilter(a1,fspecial("gaussian",3,2));
