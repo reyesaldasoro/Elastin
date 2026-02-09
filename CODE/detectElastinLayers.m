@@ -1,11 +1,11 @@
-
+DATA
 clear all
 close all
 baseDir  ='C:\Users\sbbk034\OneDrive - City, University of London\Acad\Research\LuisMartinezLemus\Elastin\';
-dir0 = dir(strcat(baseDir,'*.tif'));
+
 
 %%
-
+dir0 = dir(strcat(baseDir,'*.tif'));
 a0 = imread(strcat(baseDir,dir0(1).name));
 
 a1 = a0(:,:,1);
