@@ -11,8 +11,14 @@ end
 %%
 dir0 = dir(strcat(baseDir,'*.tif'));
 currImage = imread(strcat(baseDir,dir0(4).name));
-%imagesc(currImage)
-elastinLayers=detectElastinLayers(currImage)
+imagesc(currImage)
+
+%%
+[vessel,lumen,background,watershedIntensity2] = detectLumenBackground(currImage);
+
+ elastinLayers = regionGrowingElastin(watershedIntensity2);
+
+%elastinLayers=detectElastinLayers(currImage)
 %%
 
 a1 = currImage(:,:,1);
