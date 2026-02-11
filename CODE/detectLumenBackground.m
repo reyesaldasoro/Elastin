@@ -40,7 +40,8 @@ vessel              = uint8(imdilate(vessel_2,ones(5)))-lumen;
 % figure
 % imagesc(currImage.*(repmat(vessel,[1 1 3])))
 %%
-watershedClean      = uint8(a6==0).*uint8((1-lumen).*(1-background));
-watershedIntensity  = uint8(watershedClean).*redInverted;
+a8                  = (uint8(edge(a5,'canny',[],9)));
+watershedClean      = uint8(a6==0).*uint8(vessel);
+watershedIntensity  = uint8(watershedClean).*redInverted.*(1-a8);
 
 %imagesc(watershedIntensity)
