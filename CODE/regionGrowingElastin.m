@@ -3,9 +3,9 @@ function elastinLayers = regionGrowingElastin(watershedIntensity)
 maxIntensity        = max(watershedIntensity(:));
 seed                = watershedIntensity==maxIntensity;
 
-for k=1:600
+for k=1:700
     if mod(k,50)==0
-        seed        = bwmorph(seed,'spur',5);% 1+k/10);
+        seed        = bwmorph(seed,'spur',5+floor(k/100));% 1+k/10);
         % seed_B1     = bwmorph(bwskel(seed),'branchpoints');
         % seed        = bwmorph(seed-seed_B1,'spur',5);% 1+k/10);
     end
@@ -18,11 +18,13 @@ for k=1:600
     % curr_keep1  = unique(curr_L.*seed_d);
     % curr_keep   = ismember(curr_L,curr_keep1(2:end));
 
-    % imagesc(2*seed+seed_d)
+     imagesc(2*seed+seed_d)
+     axis([3700 4300 3800 4700])  % fig 4
     % axis([2100 2600 3100 3600])
     %axis ([2100 2600 2700 3200])
-    % drawnow
-    % pause(0.0001)
+     drawnow
+     pause(0.0001)
+     disp(k)
     n_seed = sum(sum(seed>0));
     seed            = seed|(seed_d.*(watershedIntensity>(250-floor(k/10))));
     n_seed2 = sum(sum(seed>0));
