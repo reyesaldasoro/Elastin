@@ -21,9 +21,23 @@ a6_P = regionprops(a6,'Area');
 % it is assumed that (1,1) is background 
 
 [k1,k2]             = sort([a6_P.Area],'descend');
-background          = uint8(imclose(a6==(k2(1)),ones(round(min(rows,cols)/100))) );
-lumen               = uint8(imerode(imfill(a6==(k2(2)),'holes'),ones(5)));
+
+%background          = uint8(imerode(imclose(a6==(k2(1)),ones(round(min(rows,cols)/200))),ones(15)));
+
+lumen               = uint8(imerode(imfill(a6==(k2(2)),'holes')                         ,ones(5)));
+background          = uint8(a6==(k2(1)));
+
+vessel_0            = 1-(background);
+vessel_1            = bwlabel(vessel_0);
+vessel_1P           = regionprops(vessel_1,'area');
+
+[k1,k2]             = sort([vessel_1P.Area],'descend');
+vessel_2            = vessel_1==(k2(1));
+vessel              = uint8(imdilate(vessel_2,ones(5)))-lumen;
 % imagesc(background*2+lumen)
+figure
+imagesc(currImage.*(repmat(vessel,[1 1 3])))
+
 %%
 watershedClean      = uint8(a6==0).*uint8((1-lumen).*(1-background));
 watershedIntensity  = uint8(watershedClean).*redInverted;
