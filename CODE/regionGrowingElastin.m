@@ -25,7 +25,7 @@ for k=1:1999
     % curr_keep1  = unique(curr_L.*seed_d);
     % curr_keep   = ismember(curr_L,curr_keep1(2:end));
 
-    if mod(k,10)==0
+    if mod(k,100)==0
         imagesc(2*seed+seed_d)
         % axis([3700 4300 3800 4700])  % fig 4
         axis([2100 2700 2600 3600])    % fig 1
@@ -46,11 +46,38 @@ end
 
 
 
-%%
-% This may fill the lumen and everything else. It is necessary to check
+%% Post process, fill small holes
+% Imfill holes may fill the lumen and everything else. It is necessary to check
 % that it only fills small holes
-seed1               = imfill(seed,'holes');
-seed2               = ((bwskel(seed1)));
+seedFilled          = imfill(seed,'holes');
+seedHoles           = bwlabel(seedFilled-seed);
+seedHoles_P         = regionprops(seedHoles,'Area','MajorAxisLength','MinorAxisLength');
+
+seed1               = seed|ismember(seedHoles,find([seedHoles_P.MinorAxisLength]<20));
+seed2               = bwmorph(seed1,'thin','inf');
+%imagesc(2*seed2+seed)
+%% Connect layers that may be a few pixels away, but only on the end points
+
+[q1,q2]=bwlabel(seed2);
+
+for k=1:q2
+    q3 = unique(q1.*imdilate(bwmorph(q1==k,'endpoints'),ones(9)));
+    q3(q3==k)=[];
+    q3(q3==0)=[];
+    q4(k,1:1+numel(q3))=[k q3'];
+end
+
+for k1=1:k
+    currRow         = q4(k1,:);
+    currRowHigher   = currRow>k1;
+    q5(currRow(currRowHigher))=q5(k1,1);
+end
+
+
+elastinLayers = seed2;
+return
+
+%%
 seed3               = bwmorph(seed2,'spur',10);
 seed3_L             = bwlabel(seed3);
 seed3_B             = bwmorph((seed3),'branchpoints');
