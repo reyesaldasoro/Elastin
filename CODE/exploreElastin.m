@@ -14,18 +14,13 @@ currImage = imread(strcat(baseDir,dir0(1).name));
 figure(1)
 imagesc(currImage)
 
-[vessel,lumen,background,watershedIntensity] = detectLumenBackground(currImage);
+[vessel,lumen,background,watershedIntensity,redInverted] = detectLumenBackground(currImage);
 figure(2)
 imagesc(currImage.*repmat(vessel,[1 1 3]));
 
 %%
-figure(13)
- elastinLayers = regionGrowingElastin(watershedIntensity);
-
-
- currImage2=currImage;
-currImage2(:,:,2) = uint8(255*imdilate(elastinLayers,ones(3))) + (currImage(:,:,2).*uint8(1-imdilate(elastinLayers,ones(3)))) ;
-imagesc(currImage2)
+figure(33)
+ elastinLayers2 = regionGrowingElastin(watershedIntensity);
 
 
 %elastinLayers=detectElastinLayers(currImage)
