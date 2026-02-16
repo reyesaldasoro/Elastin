@@ -20,9 +20,11 @@ imagesc(currImage.*repmat(vessel,[1 1 3]));
 
 %%
 figure(33)
- elastinLayers2 = regionGrowingElastin(watershedIntensity);
+ elastinLayers = regionGrowingElastin(watershedIntensity);
 
-
+currImage2(:,:,2) = uint8(255*imdilate(elastinLayers,ones(3))) + (currImage(:,:,2).*uint8(1-imdilate(elastinLayers,ones(3)))) ;
+figure
+imagesc(currImage2)
 %elastinLayers=detectElastinLayers(currImage)
 %%
 
