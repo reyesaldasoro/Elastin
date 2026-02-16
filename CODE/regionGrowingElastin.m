@@ -1,7 +1,7 @@
 function elastinLayers = regionGrowingElastin(watershedIntensity)
 %%
 maxIntensity        = max(watershedIntensity(:));
-seed                = watershedIntensity==maxIntensity;
+seed                = watershedIntensity>=(maxIntensity-10);
 %%
 for k=1:1999
     if mod(k,50)==1
@@ -15,6 +15,9 @@ for k=1:1999
         % dilation is normally ones(3) except every 100 to allow cases that have been broken by 1 pixel
         seed_d          = imdilate(seed_E1,ones(7));
         %seed_d          = imdilate(seed_E1,[0 1 1 1 0;1 1 1 1 1;1 1 1 1 1;1 1 1 1 1; 0 1 1 1 0]);
+
+    elseif mod(k,900)==0
+        seed_d          = imdilate(seed_E1,ones(15));
     else
         seed_d          = imdilate(seed_E1,[1 1 1;1 1 1;1 1 1]);
     end
@@ -33,12 +36,12 @@ for k=1:1999
         drawnow
         pause(0.0001)
     end
-     disp(k)
+     %disp(k)
     n_seed = sum(sum(seed>0));
     seed            = seed|(seed_d.*(watershedIntensity>(250-floor(k/10))));
     n_seed2 = sum(sum(seed>0));
 
-    %disp([k -n_seed+n_seed2])
+    disp([k -n_seed+n_seed2])
 end
 %% Once the main region growing is finished, join the layers, label and join one by one
 % Then spur, remove small holes and then find points touching Y junctions
@@ -66,6 +69,7 @@ for k=1:q2
     q3(q3==0)=[];
     q4(k,1:1+numel(q3))=[k q3'];
 end
+q5=q4;
 
 for k1=1:k
     currRow         = q4(k1,:);
