@@ -29,19 +29,19 @@ for k=1:1999
     % curr_keep   = ismember(curr_L,curr_keep1(2:end));
 
     if mod(k,100)==0
-        imagesc(2*seed+seed_d)
+        %imagesc(2*seed+seed_d)
         % axis([3700 4300 3800 4700])  % fig 4
-        axis([2100 2700 2600 3600])    % fig 1
+        %axis([2100 2700 2600 3600])    % fig 1
         %axis ([2100 2600 2700 3200])
-        drawnow
-        pause(0.0001)
+        %drawnow
+        %pause(0.0001)
     end
      %disp(k)
     n_seed = sum(sum(seed>0));
     seed            = seed|(seed_d.*(watershedIntensity>(250-floor(k/10))));
     n_seed2 = sum(sum(seed>0));
 
-    disp([k -n_seed+n_seed2])
+    %disp([k -n_seed+n_seed2])
 end
 %% Once the main region growing is finished, join the layers, label and join one by one
 % Then spur, remove small holes and then find points touching Y junctions
@@ -59,25 +59,10 @@ seedHoles_P         = regionprops(seedHoles,'Area','MajorAxisLength','MinorAxisL
 seed1               = seed|ismember(seedHoles,find([seedHoles_P.MinorAxisLength]<20));
 seed2               = bwmorph(seed1,'thin','inf');
 %imagesc(2*seed2+seed)
-%% Connect layers that may be a few pixels away, but only on the end points
-
-[q1,q2]=bwlabel(seed2);
-
-for k=1:q2
-    q3 = unique(q1.*imdilate(bwmorph(q1==k,'endpoints'),ones(9)));
-    q3(q3==k)=[];
-    q3(q3==0)=[];
-    q4(k,1:1+numel(q3))=[k q3'];
-end
-q5=q4;
-
-for k1=1:k
-    currRow         = q4(k1,:);
-    currRowHigher   = currRow>k1;
-    q5(currRow(currRowHigher))=q5(k1,1);
-end
 
 
-elastinLayers = seed2;
+elastinLayers       = seed2;
+
+
 
 
