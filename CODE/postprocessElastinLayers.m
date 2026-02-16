@@ -1,6 +1,36 @@
 function elastinLayers_clean = postprocessElastinLayers (elastinLayers)
 
 
+%% Connect layers that may be a few pixels away, but only on the end points
+
+[q1,q2]=bwlabel(elastinLayers);
+
+for k=1:q2
+    q3 = unique(q1.*imdilate(bwmorph(q1==k,'endpoints'),ones(9)));
+    q3(q3==k)=[];
+    q3(q3==0)=[];
+    q4(k,1:1+numel(q3))=[k q3'];
+end
+q5=q4;
+
+for k1=1:k
+    currRow         = q4(k1,:);
+    currRowHigher   = currRow>k1;
+    q5(currRow(currRowHigher))=q5(k1,1);
+end
+
+elastinLayers_L2=zeros(size(elastinLayers_L));
+for k1 = 1:k
+    elastinLayers_L2=elastinLayers_L2 + (q5(k1,1))*(elastinLayers_L==k1);
+end
+
+elastinLayers_L3=zeros(size(elastinLayers_L));
+
+for k1=1:k
+    elastinLayers_L3 = elastinLayers_L3 + k1*(elastinLayers_L2==k1)|(bwmorph(imdilate(bwmorph(elastinLayers_L2==k1,"endpoints"),ones(7)),'thin','inf'));
+end
+
+
 
 
 
