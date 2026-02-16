@@ -7,8 +7,7 @@ if levs>1
 else
     redChannel      = currImage;
 end
-redChannel_LPF      = imfilter(redChannel,fspecial("gaussian",3,2));
-redInverted         = 255-redChannel_LPF;
+
 
 a3 = redInverted>50;
 a4 = imopen(a3,ones(5));
