@@ -14,18 +14,29 @@ currImage = imread(strcat(baseDir,dir0(1).name));
 figure(1)
 imagesc(currImage)
 
-[vessel,lumen,background,watershedIntensity,redInverted] = detectLumenBackground(currImage);
+[vessel,lumen,background,watershedIntensity2,redInverted,watershedClean] = detectLumenBackground(currImage);
 figure(2)
 imagesc(currImage.*repmat(vessel,[1 1 3]));
 
 %%
-figure(33)
- elastinLayers = regionGrowingElastin(watershedIntensity);
-
-currImage2(:,:,2) = uint8(255*imdilate(elastinLayers,ones(3))) + (currImage(:,:,2).*uint8(1-imdilate(elastinLayers,ones(3)))) ;
+%figure(33)
+ elastinLayers2 = regionGrowingElastin(watershedIntensity2);
+currImage2 = currImage;
+currImage2(:,:,2) = uint8(255*imdilate(elastinLayers2,ones(3))) + (currImage(:,:,2).*uint8(1-imdilate(elastinLayers2,ones(3)))) ;
 figure
 imagesc(currImage2)
 %elastinLayers=detectElastinLayers(currImage)
+%% frangi filters
+
+
+B = fibermetric(redInverted,18,'ObjectPolarity','dark');
+BW = imbinarize(B);
+imagesc(labeloverlay(2*redInverted,BW))
+%imagesc(double(watershedClean).*(1-BW))
+axis([2100 2700 3000 3500])
+%%
+imagesc(imdilate(2*double(elastinLayers)+double(1-BW).*double(watershedClean),ones(2)))
+
 %%
 
 a1 = currImage(:,:,1);
