@@ -1,9 +1,19 @@
 function elastinLayers_clean = postprocessElastinLayers (elastinLayers)
 
+%% strong layers 
+[elastinLayers_L,numLayers]     = bwlabel(elastinLayers);
+elastinLayers_P                 = regionprops(elastinLayers_L,watershedIntensity,'area','MeanIntensity');
+
+
+%%
+
+imagesc(imdilate(elastinLayers+ismember(elastinLayers_L,find([elastinLayers_P.MeanIntensity]>160)),ones(5)))
+
+
 
 %% Connect layers that may be a few pixels away, but only on the end points
 
-[q1,q2]=bwlabel(elastinLayers);
+
 
 for k=1:q2
     q3 = unique(q1.*imdilate(bwmorph(q1==k,'endpoints'),ones(9)));
