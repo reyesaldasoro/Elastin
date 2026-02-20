@@ -43,12 +43,16 @@ vessel              = uint8(imdilate(vessel_2,ones(5)))-lumen;
 a55=a5;
 a55(a55>230)=255;
 a8                  = uint8(imdilate(edge(a55,'canny',[],4),ones(3)));
+
 a9                  = watershed( imfilter(redInverted.*vessel,fspecial('gaussian',9,7)));
 watershedClean      = uint8(a9==0).*uint8(vessel);
 
 %imagesc(watershedClean+2*(a8.*vessel))
 %axis([2100 2700 3000 3500])
+
+ B = fibermetric(redInverted,18,'ObjectPolarity','dark');
+BW = imbinarize(B);
 %%
 watershedIntensity  = uint8(watershedClean).*redInverted.*(1-a8);
-
+watershedIntensity  = uint8(watershedClean).*redInverted.*uint8(1-B);
 %imagesc(watershedIntensity)
