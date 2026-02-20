@@ -1,14 +1,21 @@
-function elastinLayers_clean = postprocessElastinLayers (elastinLayers)
+function elastinLayers_clean = postprocessElastinLayers (elastinLayers,red)
 
 %% strong layers 
 [elastinLayers_L,numLayers]     = bwlabel(elastinLayers);
-elastinLayers_P                 = regionprops(elastinLayers_L,watershedIntensity,'area','MeanIntensity');
+elastinLayers_P                 = regionprops(elastinLayers_L,watershedIntensity,'area','MeanIntensity','MaxIntensity','MinIntensity');
 
 
-%%
+%% remove small, not intense and spur 1
+elastinLayers_1                 = ismember(elastinLayers_L,find([elastinLayers_P.MeanIntensity]>180));
+elastinLayers_2                 = ismember(elastinLayers_L,find([elastinLayers_P.Area]>25));
+elastinLayers_3                 = bwmorph(elastinLayers&elastinLayers_1&elastinLayers_2,"spur",4);
 
-imagesc(imdilate(elastinLayers+ismember(elastinLayers_L,find([elastinLayers_P.MeanIntensity]>160)),ones(5)))
+% remove not intense
+% find edge points
 
+elastinEndPoints                = bwmorph(elastinLayers_3,'endpoints');
+sum(sum(elastinEndPoints))
+imagesc(imdilate(elastinLayers_3+2*elastinEndPoints,ones(5)))
 
 
 %% Connect layers that may be a few pixels away, but only on the end points
