@@ -26,7 +26,19 @@ currImage2(:,:,2) = uint8(255*imdilate(elastinLayers,ones(3))) + (currImage(:,:,
 figure
 imagesc(currImage2)
 %elastinLayers=detectElastinLayers(currImage)
+
+%%
+
+currImage3 = currImage;
+currImage3(:,:,2) = uint8(255*imdilate(elastinEndPoints,ones(12))) + (currImage(:,:,2).*uint8(1-imdilate(elastinEndPoints,ones(12)))) ;
+figure
+imagesc(currImage3)
+
+
 %% frangi filters
+
+
+
 
 
 B = fibermetric(redInverted,18,'ObjectPolarity','dark');
