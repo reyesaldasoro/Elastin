@@ -1,4 +1,4 @@
-function elastinLayers_clean = postprocessElastinLayers (elastinLayers,redInverted)
+function elastinEndPoints_3 = postprocessElastinLayers (elastinLayers,redInverted)
 
 %% strong layers 
 % First skeletonise and keep only the larger branches, spur to remove the
@@ -24,9 +24,26 @@ elastinEndPoints_3              = elastinEndPoints_3 .* imerode((1-elastinBranch
 
 % Detect end of layer when endpoint is far from another endpoint
 [elastinEndPoints_3_L,numEndPoints] = bwlabel(elastinEndPoints_3);
-
+%%
 imagesc(imdilate(elastinLayers_3*50,ones(3)) + imdilate(elastinEndPoints_3_L,ones(25)))
 axis ([1100 2750 920 3570 ])
+
+%% Iterate over the endpoints to determine how close they are to other points
+pointsTooClose =[];
+for k=1:numEndPoints
+    p=unique(imdilate(elastinEndPoints_3_L==k,ones(25)).*(elastinEndPoints_3_L));
+    if numel(p)>2
+        pointsTooClose = [pointsTooClose;p];
+    end
+end
+
+
+pointsTooClose = unique(pointsTooClose);
+pointsTooClose (pointsTooClose==0)=[];
+
+elastinEndPoints_3_L(ismember(elastinEndPoints_3_L,pointsTooClose))=0;
+
+
 %% Connect layers that may be a few pixels away, but only on the end points
 % 
 % [q1,q2]=bwlabel(elastinLayers_1);
@@ -149,4 +166,4 @@ axis ([1100 2750 920 3570 ])
 % seed6_L                     = bwlabel(seed6);
 % seed6_P                     = regionprops(seed6_L,'area');
 % %%
-elastinLayers               = ismember(seed6_L,find([seed6_P.Area]>21));
+%elastinLayers               = ismember(seed6_L,find([seed6_P.Area]>21));
