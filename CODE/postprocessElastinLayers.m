@@ -6,7 +6,7 @@ function elastinLayers_clean = postprocessElastinLayers (elastinLayers,redInvert
 elastinLayers_0                 = bwskel(elastinLayers,'minbranch',30);
 elastinLayers_0                 = bwmorph(elastinLayers_0,"spur",3);
 
-%% remove not intense and small
+% remove not intense and small
 % small and not very intense segments are removed
 [elastinLayers_L,numLayers]     = bwlabel(elastinLayers_0);
 elastinLayers_P                 = regionprops(elastinLayers_L,redInverted,'area','MeanIntensity','MaxIntensity','MinIntensity');
@@ -14,14 +14,19 @@ elastinLayers_P                 = regionprops(elastinLayers_L,redInverted,'area'
 elastinLayers_1                 = ismember(elastinLayers_L,find([elastinLayers_P.MeanIntensity]>210));
 elastinLayers_2                 = ismember(elastinLayers_L,find([elastinLayers_P.Area]>90));
 elastinLayers_3                 = elastinLayers_0&elastinLayers_1&elastinLayers_2;
-[elastinLayers_L3,numLayers_3]  = bwlabel(elastinLayers_3);
-% now calculate end points
+%[elastinLayers_L3,numLayers_3]  = bwlabel(elastinLayers_3);
+% now calculate end points and branch points
 elastinEndPoints_3              = bwmorph(elastinLayers_3,'endpoints');
 elastinBranchPoints_3           = bwmorph(elastinLayers_3,'branchpoints');
 
-%% Detect end of layer when endpoint is far from another endpoint
+% endpoints very close to branch points are discarded 
+elastinEndPoints_3              = elastinEndPoints_3 .* imerode((1-elastinBranchPoints_3),ones(15));
+
+% Detect end of layer when endpoint is far from another endpoint
 [elastinEndPoints_3_L,numEndPoints] = bwlabel(elastinEndPoints_3);
 
+imagesc(imdilate(elastinLayers_3*50,ones(3)) + imdilate(elastinEndPoints_3_L,ones(25)))
+axis ([1100 2750 920 3570 ])
 %% Connect layers that may be a few pixels away, but only on the end points
 % 
 % [q1,q2]=bwlabel(elastinLayers_1);
