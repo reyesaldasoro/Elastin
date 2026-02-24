@@ -28,9 +28,10 @@ imagesc(currImage2)
 %elastinLayers=detectElastinLayers(currImage)
 
 %%
-
+elastinEndPoints = postprocessElastinLayers (elastinLayers,redInverted);
+%%
 currImage3 = currImage;
-currImage3(:,:,2) = uint8(255*imdilate(elastinEndPoints,ones(12))) + (currImage(:,:,2).*uint8(1-imdilate(elastinEndPoints,ones(12)))) ;
+currImage3(:,:,2) = uint8(240*imdilate(elastinEndPoints,ones(14))) + (currImage(:,:,2).*uint8(1-imdilate(elastinEndPoints,ones(14)))) ;
 figure
 imagesc(currImage3)
 
