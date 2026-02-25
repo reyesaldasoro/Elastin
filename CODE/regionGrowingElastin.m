@@ -29,12 +29,12 @@ for k=1:1000
     % curr_keep   = ismember(curr_L,curr_keep1(2:end));
 
     if mod(k,100)==0
-        imagesc(2*seed+seed_d)
-        %axis([3700 4300 3800 4700])  % fig 4
-        axis([2100 2700 3000 3500])    % fig 1
-        %axis ([2100 2600 2700 3200])
-        drawnow
-        pause(0.0001)
+        % imagesc(2*seed+seed_d)
+        % %axis([3700 4300 3800 4700])  % fig 4
+        % axis([2100 2700 3000 3500])    % fig 1
+        % %axis ([2100 2600 2700 3200])
+        % drawnow
+        % pause(0.0001)
     end
     % disp(k)
     n_seed = sum(sum(seed>0));
