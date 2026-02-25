@@ -1,4 +1,4 @@
-function [elastinEndPoints_3_L,elastinLayers_3] = postprocessElastinLayers (elastinLayers,redInverted)
+function [elastinEndPoints_4_L,elastinLayers_3,numEndPoints] = postprocessElastinLayers (elastinLayers,redInverted)
 
 %% strong layers 
 % First skeletonise and keep only the larger branches, spur to remove the
@@ -41,8 +41,11 @@ end
 pointsTooClose = unique(pointsTooClose);
 pointsTooClose (pointsTooClose==0)=[];
 
+%remove points
 elastinEndPoints_3_L(ismember(elastinEndPoints_3_L,pointsTooClose))=0;
+% final labelling
 
+[elastinEndPoints_4_L,numEndPoints] = bwlabel(elastinEndPoints_3_L>0);
 
 %% Connect layers that may be a few pixels away, but only on the end points
 % 
