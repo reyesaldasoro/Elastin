@@ -1,4 +1,4 @@
-function [vessel,lumen,background,watershedIntensity,redInverted,watershedClean] = detectLumenBackground(currImage)
+function [redInverted,watershedIntensity,vessel,lumen,background,watershedClean] = detectLumenBackground(currImage)
 
 
 
