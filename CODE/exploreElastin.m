@@ -33,7 +33,7 @@ imagesc(currImage2)
 currImage3 = currImage;
 currImage3(:,:,1) = uint8(175*imdilate(elastinLayers_3,ones(3))) + (currImage(:,:,1).*uint8(1-imdilate(elastinLayers_3,ones(3)))) ;
 
-currImage3(:,:,2) = uint8(240*imdilate(elastinEndPoints>0,ones(14))) + (currImage(:,:,2).*uint8(1-imdilate(elastinEndPoints>0,ones(14)))) ;
+currImage3(:,:,2) = uint8(240*imdilate(elastinEndPoints_3_L>0,ones(14))) + (currImage(:,:,2).*uint8(1-imdilate(elastinEndPoints_3_L>0,ones(14)))) ;
 figure
 imagesc(currImage3)
 
