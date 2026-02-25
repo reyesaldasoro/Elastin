@@ -25,8 +25,8 @@ elastinEndPoints_3              = elastinEndPoints_3 .* imerode((1-elastinBranch
 % Detect end of layer when endpoint is far from another endpoint
 [elastinEndPoints_3_L,numEndPoints] = bwlabel(elastinEndPoints_3);
 %%
-imagesc(imdilate(elastinLayers_3*50,ones(3)) + imdilate(elastinEndPoints_3_L,ones(25)))
-axis ([1100 2750 920 3570 ])
+%imagesc(imdilate(elastinLayers_3*50,ones(3)) + imdilate(elastinEndPoints_3_L,ones(25)))
+%axis ([1100 2750 920 3570 ])
 
 %% Iterate over the endpoints to determine how close they are to other points
 pointsTooClose =[];
