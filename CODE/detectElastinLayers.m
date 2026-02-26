@@ -1,4 +1,4 @@
-function [elastinLayers,elastinEndPoints_3_L] =detectElastinLayers(currImage)
+function [elastinLayers2,elastinEndPoints] =detectElastinLayers(currImage)
 
 
 [redInverted,watershedIntensity]        = detectLumenBackground(currImage);
@@ -6,7 +6,7 @@ function [elastinLayers,elastinEndPoints_3_L] =detectElastinLayers(currImage)
 elastinLayers                           = regionGrowingElastin(watershedIntensity);
 
 
-[elastinEndPoints_3_L,elastinLayers_3,numEndPoints]  = postprocessElastinLayers(elastinLayers,redInverted);
+[elastinLayers2,elastinEndPoints]       = postprocessElastinLayers(elastinLayers,redInverted);
 
 
 
