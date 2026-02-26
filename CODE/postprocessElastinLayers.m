@@ -1,4 +1,4 @@
-function [elastinLayers_3,elastinEndPoints_4_L,numEndPoints] = postprocessElastinLayers (elastinLayers,redInverted)
+function [elastinLayers_5,elastinEndPoints_4_L,numEndPoints] = postprocessElastinLayers (elastinLayers,redInverted)
 
 %% strong layers 
 % First skeletonise and keep only the larger branches, spur to remove the
@@ -15,9 +15,22 @@ elastinLayers_1                 = ismember(elastinLayers_L,find([elastinLayers_P
 elastinLayers_2                 = ismember(elastinLayers_L,find([elastinLayers_P.Area]>90));
 elastinLayers_3                 = elastinLayers_0&elastinLayers_1&elastinLayers_2;
 %[elastinLayers_L3,numLayers_3]  = bwlabel(elastinLayers_3);
+
+%fill holes and thin 
+
+seedFilled          = imfill(elastinLayers_3,'holes');
+seedHoles           = bwlabel(imerode(seedFilled-elastinLayers_3,ones(3)));
+seedHoles_P         = regionprops(seedHoles,'Area','MajorAxisLength','MinorAxisLength');
+
+seed0               = ismember(seedHoles,find([seedHoles_P.MinorAxisLength]<50));
+seed1               = elastinLayers_3|imdilate(seed0,ones(5));
+elastinLayers_4               = bwmorph(seed1,'thin','inf');
+
+elastinLayers_5                 = bwskel(elastinLayers_4,'minbranch',100);
+elastinLayers_5                 = bwmorph(elastinLayers_5,"spur",3);
 % now calculate end points and branch points
-elastinEndPoints_3              = bwmorph(elastinLayers_3,'endpoints');
-elastinBranchPoints_3           = bwmorph(elastinLayers_3,'branchpoints');
+elastinEndPoints_3              = bwmorph(elastinLayers_5,'endpoints');
+elastinBranchPoints_3           = bwmorph(elastinLayers_5,'branchpoints');
 
 % endpoints very close to branch points are discarded 
 elastinEndPoints_3              = elastinEndPoints_3 .* imerode((1-elastinBranchPoints_3),ones(15));
