@@ -9,13 +9,14 @@ end
 
 
 %%
-dir0 = dir(strcat(baseDir,'*.tif'));
-currImage = imread(strcat(baseDir,dir0(1).name));
+dir0                                    = dir(strcat(baseDir,'*.tif'));
+currImage                               = imread(strcat(baseDir,dir0(1).name));
 figure(1)
 imagesc(currImage)
 
-[elastinLayers,OutputLayers,outputLayersPoints,numEndPoints] =detectElastinLayers(currImage);
+[elastinLayers,elastinEndPoints_3_L]    = detectElastinLayers(currImage);
 
+[OutputLayers, outputLayersPoints]      = labelElastinLayers (currImage, elastinLayers,elastinEndPoints_3_L);
 % %% 
 % [vessel,lumen,background,watershedIntensity2,redInverted,watershedClean] = detectLumenBackground(currImage);
 % figure(2)
