@@ -1,4 +1,4 @@
-function [elastinEndPoints_4_L,elastinLayers_3,numEndPoints] = postprocessElastinLayers (elastinLayers,redInverted)
+function [elastinLayers_3,elastinEndPoints_4_L,numEndPoints] = postprocessElastinLayers (elastinLayers,redInverted)
 
 %% strong layers 
 % First skeletonise and keep only the larger branches, spur to remove the
