@@ -16,12 +16,13 @@ for k=1:4
     [elastinLayers,redInverted,lumen]       = detectElastinLayers(currImage);
     [elastinLayers2,elastinEndPoints]       = postprocessElastinLayers(elastinLayers,redInverted);
     [OutputLayers, outputLayersPoints]      = labelElastinLayers (currImage, elastinLayers2,elastinEndPoints);
+    elastinMetrics                          = calculateElastinMetrics(currImage,redInverted,elastinLayers2, elastinEndPoints,lumen);
     figure
     imagesc(outputLayersPoints)
     set(gca,'position',[0 0 1 1 ]);axis off
     axis equal
     filename                                = strcat(dir0(k).name(1:end-4),'_output.mat');
-    save(filename,'currImage','elastinLayers','OutputLayers','outputLayersPoints','elastinLayers2','elastinEndPoints','redInverted',"lumen")
+    save(filename,'currImage','elastinLayers','OutputLayers','outputLayersPoints','elastinLayers2','elastinEndPoints','redInverted',"lumen",'elastinMetrics')
     
     % filename                            = strcat(dir0(k).name(1:end-4),'_output.png');
     % imwrite(outputLayersPoints,filename)
