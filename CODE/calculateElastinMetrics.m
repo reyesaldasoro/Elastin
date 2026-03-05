@@ -10,10 +10,20 @@ avWidthLayers           = sum(sum(LayersFilled))/sum(sum(elastinLayers2));
 numEndPoints            = max(elastinEndPoints(:));
 
 
+lumen_P                         = regionprops(lumen,'solidity','EquivDiameter','Area','Eccentricity','MajorAxisLength','MinorAxisLength');
+layers_P                        = regionprops(LayersFilled,'solidity','EquivDiameter','Area','Eccentricity','MajorAxisLength','MinorAxisLength');
+
+
 
 elastinMetrics.numEndPoints     = numEndPoints;
 elastinMetrics.avWidthVessel    = avWidthVessel;
 elastinMetrics.avWidthLayers    = avWidthLayers;
+elastinMetrics.ratioLumenVessel = lumen_P.Area/(lumen_P.Area+layers_P.Area);
+elastinMetrics.ratioLayersLumen = layers_P.Area/(lumen_P.Area);
+elastinMetrics.LumenAspectRatio = lumen_P.MinorAxisLength/(lumen_P.MajorAxisLength);
+
+
+
 %%
 % q1 = elastinLayers2(:);
 % q2= redInverted(:);
