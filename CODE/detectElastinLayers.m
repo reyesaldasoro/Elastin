@@ -1,7 +1,7 @@
-function [elastinLayers,redInverted] =detectElastinLayers(currImage)
+function [elastinLayers,redInverted,lumen] =detectElastinLayers(currImage)
 
 
-[redInverted,watershedIntensity]        = detectLumenBackground(currImage);
+[redInverted,watershedIntensity,vessel,lumen]        = detectLumenBackground(currImage);
 
 elastinLayers                           = regionGrowingElastin(watershedIntensity);
 
