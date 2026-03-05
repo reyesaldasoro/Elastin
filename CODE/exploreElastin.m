@@ -7,22 +7,26 @@ else
     baseDir = ("/Users/constantino-carlos.reyes-aldasoro/Documents/GitHub/Elastin/DATA/");
 end
 
-
-%%
 dir0                                    = dir(strcat(baseDir,'*.tif'));
+%%
+
 for k=1:4
     disp(k)
     currImage                               = imread(strcat(baseDir,dir0(k).name));
-    [elastinLayers,redInverted]             = detectElastinLayers(currImage);
+    [elastinLayers,redInverted,lumen]       = detectElastinLayers(currImage);
     [elastinLayers2,elastinEndPoints]       = postprocessElastinLayers(elastinLayers,redInverted);
     [OutputLayers, outputLayersPoints]      = labelElastinLayers (currImage, elastinLayers2,elastinEndPoints);
     figure
     imagesc(outputLayersPoints)
     set(gca,'position',[0 0 1 1 ]);axis off
     axis equal
-    filename                            = strcat(dir0(k).name(1:end-4),'_output.png');
-    %print('-djpeg','-r800',filename)
-    imwrite(outputLayersPoints,filename)
+    filename                                = strcat(dir0(k).name(1:end-4),'_output.mat');
+    save(filename,'currImage','elastinLayers','OutputLayers','outputLayersPoints','elastinLayers2','elastinEndPoints','redInverted',"lumen")
+    
+    % filename                            = strcat(dir0(k).name(1:end-4),'_output.png');
+    % imwrite(outputLayersPoints,filename)
+
+
 end
 %% 
 % [vessel,lumen,background,watershedIntensity2,redInverted,watershedClean] = detectLumenBackground(currImage);
