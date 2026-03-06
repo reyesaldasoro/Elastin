@@ -30,6 +30,17 @@ for k=1:4
 
 end
 %% 
+
+
+ [xx,yy]=find(elastinLayers2,1,'last');
+
+contour = bwtraceboundary(elastinLayers2,[xx yy],'W');
+
+for k =1: size(contour,1)
+    qq(k) = redInverted(contour(k,1),contour(k,2));
+end
+%%
+
 % [vessel,lumen,background,watershedIntensity2,redInverted,watershedClean] = detectLumenBackground(currImage);
 % figure(2)
 % imagesc(currImage.*repmat(vessel,[1 1 3]));
