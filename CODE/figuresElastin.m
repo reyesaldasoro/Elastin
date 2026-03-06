@@ -12,6 +12,7 @@ dir0                                    = dir(strcat(baseDir,'*.tif'));
 
 k=1;
 currImage                               = imread(strcat(baseDir,dir0(k).name));
+%%
 
 figure
 imagesc(currImage)
@@ -20,7 +21,8 @@ filename                            = strcat('../Figures/Fig_1_',dir0(k).name(1:
 %imwrite(currImage,filename)
 
 print('-dpng','-r500',filename)
-axis([2273 2802 2196 2758])
+%axis([2273 2802 2196 2758])
+axis([1050 1500 1850 2350])
 filename                            = strcat('../Figures/Fig_1_ROI_',dir0(k).name(1:end-4),'.png');
 print('-dpng','-r500',filename)
 
@@ -28,13 +30,16 @@ print('-dpng','-r500',filename)
  hot2=hot;
  blue2  = hot2(:,[3 2 1]);
  green2 = hot2(:,[2 1 3]);
+
+%%
 figure
 imagesc(255 - currImage(:,:,1))
 set(gca,'position',[0 0 1 1 ]);axis off
 colormap (hot2)
 filename                            = strcat('../Figures/Fig_2_a_',dir0(k).name(1:end-4),'.png');
 print('-dpng','-r500',filename)
-axis([2273 2802 2196 2758])
+%axis([2273 2802 2196 2758])
+axis([1050 1500 1850 2350])
 filename                            = strcat('../Figures/Fig_2_a_ROI_',dir0(k).name(1:end-4),'.png');
 print('-dpng','-r500',filename)
 
@@ -44,7 +49,8 @@ set(gca,'position',[0 0 1 1 ]);axis off
 colormap (green2)
 filename                            = strcat('../Figures/Fig_2_b_',dir0(k).name(1:end-4),'.png');
 print('-dpng','-r500',filename)
-axis([2273 2802 2196 2758])
+%axis([2273 2802 2196 2758])
+axis([1050 1500 1850 2350])
 filename                            = strcat('../Figures/Fig_2_b_ROI_',dir0(k).name(1:end-4),'.png');
 print('-dpng','-r500',filename)
 
@@ -54,23 +60,104 @@ set(gca,'position',[0 0 1 1 ]);axis off
 colormap (blue2)
 filename                            = strcat('../Figures/Fig_2_c_',dir0(k).name(1:end-4),'.png');
 print('-dpng','-r500',filename)
-axis([2273 2802 2196 2758])
+%axis([2273 2802 2196 2758])
+axis([1050 1500 1850 2350])
 filename                            = strcat('../Figures/Fig_2_c_ROI_',dir0(k).name(1:end-4),'.png');
 print('-dpng','-r500',filename)
 
 
 %%
 close all
+[redInverted,watershedIntensity,vessel,lumen]        = detectLumenBackground(currImage);
+
+%%
+figure
+imagesc(vessel)
+set(gca,'position',[0 0 1 1 ]);axis off
+colormap (hot2)
+filename                            = strcat('../Figures/Fig_3_a_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+figure
+imagesc(lumen)
+set(gca,'position',[0 0 1 1 ]);axis off
+colormap (hot2)
+filename                            = strcat('../Figures/Fig_3_b_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+figure
+imagesc(imdilate(watershedIntensity,ones(2)))
+set(gca,'position',[0 0 1 1 ]);axis off
+colormap (hot2)
+filename                            = strcat('../Figures/Fig_3_c_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+%axis([2273 2802 2196 2758])
+axis([1050 1500 1850 2350])
+
+filename                            = strcat('../Figures/Fig_3_c_ROI_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+%%
+close all
+elastinLayers                           = regionGrowingElastin(watershedIntensity);
+
+%%
+
+figure
+imagesc(imdilate(elastinLayers,ones(2)))
+set(gca,'position',[0 0 1 1 ]);axis off
+colormap (hot2)
+filename                            = strcat('../Figures/Fig_4_a_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+%axis([2273 2802 2196 2758])
+axis([1050 1500 1850 2350])
+filename                            = strcat('../Figures/Fig_4_a_ROI_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+%%
+close all
+
+[elastinLayers2,elastinEndPoints]       = postprocessElastinLayers(elastinLayers,redInverted);
+%%
 
 
-[elastinLayers,redInverted,lumen]       = detectElastinLayers(currImage);
+figure
+imagesc(imdilate(2*elastinLayers2,ones(2))+imdilate(elastinEndPoints>0,ones(5)))
+set(gca,'position',[0 0 1 1 ]);axis off
+colormap (hot2)
+filename                            = strcat('../Figures/Fig_5_a_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+%axis([2273 2802 2196 2758])
+axis([1050 1500 1850 2350])
+filename                            = strcat('../Figures/Fig_5_a_ROI_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+
+%%
+close all
+[OutputLayers, outputLayersPoints]      = labelElastinLayers (currImage, elastinLayers2,elastinEndPoints);
+%%
+
+figure
+imagesc(outputLayersPoints)
+set(gca,'position',[0 0 1 1 ]);axis off
+colormap (hot2)
+filename                            = strcat('../Figures/Fig_6_a_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
+
+%axis([2273 2802 2196 2758])
+axis([1050 1500 1850 2350])
+filename                            = strcat('../Figures/Fig_6_a_ROI_',dir0(k).name(1:end-4),'.png');
+print('-dpng','-r500',filename)
 
 
 
 
 %%
-[elastinLayers2,elastinEndPoints]       = postprocessElastinLayers(elastinLayers,redInverted);
-[OutputLayers, outputLayersPoints]      = labelElastinLayers (currImage, elastinLayers2,elastinEndPoints);
+
 elastinMetrics                          = calculateElastinMetrics(currImage,redInverted,elastinLayers2, elastinEndPoints,lumen);
 figure
 imagesc(outputLayersPoints)
