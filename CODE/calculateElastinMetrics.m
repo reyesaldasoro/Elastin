@@ -18,8 +18,14 @@ layers_P                        = regionprops(LayersFilled,'solidity','EquivDiam
 elastinMetrics.numEndPoints     = numEndPoints;
 elastinMetrics.avWidthVessel    = avWidthVessel;
 elastinMetrics.avWidthLayers    = avWidthLayers;
-elastinMetrics.ratioLumenVessel = lumen_P.Area/(lumen_P.Area+layers_P.Area);
-elastinMetrics.ratioLayersLumen = layers_P.Area/(lumen_P.Area);
+try 
+    elastinMetrics.ratioLumenVessel = lumen_P.Area/(lumen_P.Area+layers_P.Area);
+    elastinMetrics.ratioLayersLumen = layers_P.Area/(lumen_P.Area);
+catch
+    elastinMetrics.ratioLumenVessel = -1;
+    elastinMetrics.ratioLayersLumen = -1;
+end
+
 elastinMetrics.LumenAspectRatio = lumen_P.MinorAxisLength/(lumen_P.MajorAxisLength);
 
 
