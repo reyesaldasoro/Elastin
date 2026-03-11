@@ -50,8 +50,8 @@ for k1=1:numDir0
     dir1                                    = dir(strcat(baseDir,filesep,dir0(k1).name,filesep,'*.tif'));
     numFiles                                = size(dir1,1);
     for k=1:numFiles
-        disp([k1 k])
-        currImage                               = imread(strcat(dir1(k).folder ,filesep   ,dir1(k).name));
+        disp([k1 k k+(k1-1)*numFiles] )
+        currName{k+(k1-1)*numFiles,1}         = (strcat(dir1(k).folder(end-2:end) ,filesep   ,dir1(k).name));
     end
 end
 
@@ -62,7 +62,7 @@ plot(resultsElastinGroups(:,8),'bo')
 
 elastinMetricLabels ={'A/B/C/D','Name','End Points','Width Layers','Width Vessel','layers/Lumen','Lumen/Vessel','Aspect Ratio'};
 
-l1=3;l2=4;
+l1=3;l2=8;
 validIndex1 = find(resultsElastinGroups(:,3)>0);
 notValid    = find(resultsElastinGroups(:,6)>1);
 validIndex  = setdiff(validIndex1,notValid); 
@@ -70,3 +70,12 @@ scatter(resultsElastinGroups(validIndex,l1),resultsElastinGroups(validIndex,l2),
 
 xlabel(elastinMetricLabels{l1},"FontSize",26)
 ylabel(elastinMetricLabels{l2},"FontSize",26)
+
+for k3=1:numel(validIndex)
+    text(resultsElastinGroups(validIndex(k3),l1),resultsElastinGroups(validIndex(k3),l2),currName{validIndex(k3)},'Interpreter','none','rotation',45)
+end
+
+filename                            = strcat('Results_',elastinMetricLabels{l1},'_',elastinMetricLabels{l2},'.png');
+filename=strrep(filename,' ','_');
+filename=strrep(filename,'/','_');
+print('-dpng','-r300',filename)
