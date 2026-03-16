@@ -1,9 +1,11 @@
 function elastinLayers = regionGrowingElastin(watershedIntensity)
 %%
 maxIntensity        = max(watershedIntensity(:));
-seed                = watershedIntensity>=(maxIntensity-10);
+maxIntensity2       = (maxIntensity-10);
+seed                = watershedIntensity>=maxIntensity2;
 %%
-for k=1:1000
+for k=2:1000
+    %disp(k)
     if mod(k,50)==1
         % Spur to remove branches that are going sideways   
         seed        = bwmorph(seed,'spur',5+floor(k/100));% 1+k/10);
@@ -30,15 +32,16 @@ for k=1:1000
 
     if mod(k,100)==0
         % imagesc(2*seed+seed_d)
-        % %axis([3700 4300 3800 4700])  % fig 4
+        % axis([3700 4300 3800 4700])  % fig 4
         % axis([2100 2700 3000 3500])    % fig 1
-        % %axis ([2100 2600 2700 3200])
+        % axis ([2100 2600 2700 3200])
+        % axis ([3200 3800 3600 4200])
         % drawnow
         % pause(0.0001)
     end
     % disp(k)
     n_seed = sum(sum(seed>0));
-    seed            = seed|(seed_d.*(watershedIntensity>(250-floor(k/10))));
+    seed            = seed|(seed_d.*(watershedIntensity>(maxIntensity2-floor(k/10))));
     n_seed2 = sum(sum(seed>0));
 
     %disp([k -n_seed+n_seed2])
