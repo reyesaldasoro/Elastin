@@ -1,4 +1,4 @@
-function [elastinLayers_5,elastinEndPoints_4_L,numEndPoints] = postprocessElastinLayers (elastinLayers,redInverted)
+function [elastinLayers_5,elastinEndPoints_4_L,numEndPoints] = postprocessElastinLayers (elastinLayers,redInverted,maxIntensity2)
 
 %% strong layers 
 % First skeletonise and keep only the larger branches, spur to remove the
@@ -11,9 +11,10 @@ elastinLayers_0                 = bwmorph(elastinLayers_0,"spur",3);
 [elastinLayers_L,numLayers]     = bwlabel(elastinLayers_0);
 elastinLayers_P                 = regionprops(elastinLayers_L,redInverted,'area','MeanIntensity','MaxIntensity','MinIntensity');
 
-elastinLayers_1                 = ismember(elastinLayers_L,find([elastinLayers_P.MeanIntensity]>210));
+elastinLayers_1                 = ismember(elastinLayers_L,find([elastinLayers_P.MeanIntensity]>(maxIntensity2-30)));
 elastinLayers_2                 = ismember(elastinLayers_L,find([elastinLayers_P.Area]>90));
-elastinLayers_3                 = elastinLayers_0&elastinLayers_1&elastinLayers_2;
+elastinLayers_2B                = ismember(elastinLayers_L,find([elastinLayers_P.Area]>300));
+elastinLayers_3                 = elastinLayers_0&((elastinLayers_1&elastinLayers_2)|elastinLayers_2B);
 %[elastinLayers_L3,numLayers_3]  = bwlabel(elastinLayers_3);
 
 %fill holes and thin 
