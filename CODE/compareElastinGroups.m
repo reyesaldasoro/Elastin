@@ -11,10 +11,10 @@ dir0                                        = dir(strcat(baseDir,'E_*'));
 numDir0                                     = size(dir0,1);
 %%
 
-for k1=1:numDir0
+for k1=2%:numDir0
     dir1                                    = dir(strcat(baseDir,filesep,dir0(k1).name,filesep,'*.tif'));
     numFiles                                = size(dir1,1);
-    for k=1:numFiles
+    for k=1%:numFiles
         disp([k1 k])
         currImage                               = imread(strcat(dir1(k).folder ,filesep   ,dir1(k).name));
         [elastinLayers,redInverted,lumen]       = detectElastinLayers(currImage);
