@@ -18,7 +18,7 @@ for k1=2%:numDir0
         disp([k1 k])
         currImage                               = imread(strcat(dir1(k).folder ,filesep   ,dir1(k).name));
         [elastinLayers,redInverted,lumen]       = detectElastinLayers(currImage);
-        [elastinLayers2,elastinEndPoints]       = postprocessElastinLayers(elastinLayers,redInverted);
+        [elastinLayers2,elastinEndPoints]       = postprocessElastinLayers(elastinLayers,redInverted,maxIntensity2);
         [OutputLayers, outputLayersPoints]      = labelElastinLayers (currImage, elastinLayers2,elastinEndPoints);
         elastinMetrics                          = calculateElastinMetrics(currImage,redInverted,elastinLayers2, elastinEndPoints,lumen);
         % figure
