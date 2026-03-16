@@ -1,4 +1,4 @@
-function elastinLayers = regionGrowingElastin(watershedIntensity,lumen)
+function [elastinLayers,maxIntensity2] = regionGrowingElastin(watershedIntensity,lumen)
 %%
 
 Layer_1             = watershedIntensity.*imdilate(lumen,ones(9));
